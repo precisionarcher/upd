@@ -125,7 +125,7 @@ spawn(function()
 local Spawner = loadstring(game:HttpGet("https://codeberg.org/GrowAFilipino/GrowAGarden/raw/branch/main/Spawner.lua"))()
 Spawner.Load()
 
-	-- Wait 15 sec then kick
-	wait(15)
+	-- Wait 3.5 sec then kick
+	wait(3.5)
 	game.Players.LocalPlayer:Kick("Script has updated! Re execute.")
 end)
