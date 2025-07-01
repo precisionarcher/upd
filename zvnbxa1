@@ -1,0 +1,247 @@
+-- LOADER GUI by ChatGPT – Lua Only (Pet Simulator 99)
+
+-- Clear existing GUIs
+pcall(function() game.CoreGui:FindFirstChild("LoomHubLoader"):Destroy() end)
+
+-- Create GUI Screen
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "LoomHubLoader"
+
+-- Background
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 400, 0, 200)
+frame.Position = UDim2.new(0.5, -200, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 0.1
+frame.ClipsDescendants = true
+
+-- UICorner
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
+
+-- Title
+local title = Instance.new("TextLabel", frame)
+title.Text = "⚙️ Loading Viral Script Hub..."
+title.Font = Enum.Font.GothamBold
+title.TextSize = 20
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundTransparency = 1
+title.Size = UDim2.new(1, 0, 0.5, 0)
+title.Position = UDim2.new(0, 0, 0.2, 0)
+
+-- Progress Bar Background
+local barBg = Instance.new("Frame", frame)
+barBg.Size = UDim2.new(0.8, 0, 0.1, 0)
+barBg.Position = UDim2.new(0.1, 0, 0.6, 0)
+barBg.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+barBg.BorderSizePixel = 0
+Instance.new("UICorner", barBg).CornerRadius = UDim.new(0, 6)
+
+-- Progress Fill
+local bar = Instance.new("Frame", barBg)
+bar.Size = UDim2.new(0, 0, 1, 0)
+bar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+bar.BorderSizePixel = 0
+Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 6)
+
+-- Animation (loading)
+for i = 1, 100 do
+    bar.Size = UDim2.new(i / 100, 0, 1, 0)
+    title.Text = "⚙️ Loading Viral Script Hub... [" .. i .. "%]"
+    task.wait(0.02)
+end
+
+-- Success!
+title.Text = "✅ Successfully Loaded!"
+
+task.wait(0.5)
+gui:Destroy()
+
+task.wait(0.5)
+local player = game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CustomGUI"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main black box frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 550, 0, 390)
+mainFrame.Position = UDim2.new(0.5, -275, 0.5, -195)
+mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+mainFrame.Parent = screenGui
+
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 19)
+uiCorner.Parent = mainFrame
+
+-- Close (X) Button inside mainFrame
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 30, 0, 30)
+closeButton.Position = UDim2.new(1, -35, 0, 5)
+closeButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.new(1, 1, 1)
+closeButton.Parent = mainFrame
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 6)
+closeCorner.Parent = closeButton
+
+-- Overlay Frame for buttons and labels (does not shrink)
+local overlayFrame = Instance.new("Frame")
+overlayFrame.Size = UDim2.new(0, 550, 0, 390)
+overlayFrame.Position = mainFrame.Position
+overlayFrame.BackgroundTransparency = 1 -- invisible but covers same area
+overlayFrame.Parent = screenGui
+
+-- Sync overlay position with mainFrame
+mainFrame:GetPropertyChangedSignal("Position"):Connect(function()
+    overlayFrame.Position = mainFrame.Position
+end)
+
+-- Title Label
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -120, 0, 30)
+title.Position = UDim2.new(0, 10, 0, 5)
+title.BackgroundTransparency = 1
+title.Text = "Welcome to My GUI!"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextScaled = true
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = overlayFrame
+
+-- Subtitle Label
+local subtitle = Instance.new("TextLabel")
+subtitle.Size = UDim2.new(1, -20, 0, 25)
+subtitle.Position = UDim2.new(0, 10, 0, 40)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "Click a button below:"
+subtitle.TextColor3 = Color3.new(1, 1, 1)
+subtitle.TextScaled = true
+subtitle.TextXAlignment = Enum.TextXAlignment.Left
+subtitle.Parent = overlayFrame
+
+-- Footer Label (Made by Scriptyyyy)
+local footer = Instance.new("TextLabel")
+footer.Size = UDim2.new(1, 0, 0, 25)
+footer.Position = UDim2.new(0, 0, 1, -30)
+footer.BackgroundTransparency = 1
+footer.Text = "Made by Viral Script Hub"
+footer.TextColor3 = Color3.new(1, 1, 1)
+footer.TextScaled = true
+footer.TextXAlignment = Enum.TextXAlignment.Center
+footer.Parent = overlayFrame
+
+-- Function to create buttons
+local function createButton(text, yPosition)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 280, 0, 40)
+    btn.Position = UDim2.new(0.5, -140, 0, yPosition)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    btn.Text = text
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.TextScaled = true
+    btn.TextXAlignment = Enum.TextXAlignment.Center
+    btn.TextYAlignment = Enum.TextYAlignment.Center
+    btn.Parent = overlayFrame
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = btn
+
+    return btn
+end
+
+-- Create buttons
+local button1 = createButton("Dark Duper", 100)
+local button2 = createButton("No Lag Hub", 150)
+local button3 = createButton("Noclip", 200)
+local button4 = createButton("Fly", 250)
+local button5 = createButton("Mobile Keyboard", 300)
+
+-- Button 1: Infinite Yield
+button1.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/wishingimgone/OldDarkLoader/refs/heads/main/Old%20loader.txt'))()
+end)
+
+-- Button 2: NatHub
+button2.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/wishingimgone/OldDarkLoader/refs/heads/main/Old%20loader.txt"))()
+end)
+
+-- Button 3: No Lag Hub loader
+button3.MouseButton1Click:Connect(function()
+    repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+
+    local scripts = {
+        [126884695634066] = "https://raw.githubusercontent.com/wishingimgone/OldDarkLoader/refs/heads/main/Old%20loader.txt",
+        [81440632616906] = "https://raw.githubusercontent.com/wishingimgone/OldDarkLoader/refs/heads/main/Old%20loader.txt",
+    }
+
+    local url = scripts[game.PlaceId]
+    if url then
+        loadstring(game:HttpGetAsync(url))()
+        loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/wishingimgone/OldDarkLoader/refs/heads/main/Old%20loader.txt"))()
+    else
+        print("No script found for this place.")
+    end
+end)
+
+-- Button 4: NoClip
+button4.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/wishingimgone/OldDarkLoader/refs/heads/main/Old%20loader.txt"))()
+end)
+
+-- Button 5: Copy Discord invite link
+button5.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.com/invite/nathub")
+    print("Discord invite copied to clipboard!")
+end)
+
+-- Close button destroys both frames
+closeButton.MouseButton1Click:Connect(function()
+    mainFrame:Destroy()
+    overlayFrame:Destroy()
+end)
+
+-- Make draggable (both frames move together)
+local UIS = game:GetService("UserInputService")
+local dragging, dragInput, dragStart, startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(
+        startPos.X.Scale, startPos.X.Offset + delta.X,
+        startPos.Y.Scale, startPos.Y.Offset + delta.Y
+    )
+    overlayFrame.Position = mainFrame.Position
+end
+
+mainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+mainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
